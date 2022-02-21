@@ -37,8 +37,9 @@ function playRound(comSelect, playerSelect) {
     }
 }
 
-function game() { 
-    for (let i = 0; i < 5; i++){
+function game(totalRound = 5) { 
+    let gamePlayed = 0;
+    while (gamePlayed < totalRound) {
         let player = prompt('Rock, paper or scissor?!')
         let computer = computerPlay();
 
@@ -52,8 +53,9 @@ function game() {
         } else {
             console.log('Draw!');
         }
+        gamePlayed ++;
     }
-    return displayGameResult(computerScore, playerScore);
+   displayGameResult(computerScore, playerScore);
 }
 
 
@@ -68,5 +70,5 @@ function displayGameResult(computerScore, playerScore) {
 }
 
 
-console.log(game());
+game(5);
 
