@@ -1,116 +1,82 @@
+let userScore = 0;
+let compScore = 0;
+const userScore_span = document.getElementById('user-score');
+const compScore_span = document.getElementById('computer-score');
+const scoreBoard_div = document.querySelector('.score-board');
+const result_p = document.querySelector('.result > p');
 
-const optionBtns = document.querySelectorAll('.options');
-const comBoard = document.querySelector('.com.score');
-const myBoard = document.querySelector('.player.score');
-const leftGame = document.querySelector('.game.left');
-const winAnnounce = document.querySelector('.winner');
-const currentGame = document.querySelector('.current');
+const rock_div = document.getElementById('r');
+const paper_div = document.getElementById('p');
+const scissor_div = document.getElementById('s');
+const choices = document.querySelectorAll('.choice');
 
-optionBtns.forEach(button => { button.addEventListener('click', getPlayerSelect) });
+getComputerChoice();
 
-
-const options = ['Rock', 'Paper', 'Scissor']
-
-let playerScore = 0;
-let computerScore = 0;
-
-
-function computerPlay() {
-    // Randomly choose the computer's option from the options array.
-    let computerChoice =
-        options[Math.floor(Math.random() * options.length)];
-    return computerChoice;
+function getComputerChoice() {
+    const options = ['r', 'p', 's'];
+    const randomNum = (Math.floor(Math.random() * 3));
+    return options[randomNum];
 }
 
-function updateScore(computerScore, playerScore) {
-    let comScore = 'Computer: ' + computerScore;
-    let myScore = 'Player: ' + playerScore;
-    comBoard.textContent = comScore;
-    myBoard.textContent = myScore;
+function convertToWord(letter) {
+    if (letter === 'r') return "Rock";
+    if (letter === 'p') return "Paper";
+    return "Scissor";
 }
 
-
-function playRound(comSelect, playerSelect) {
-    if (comSelect == playerSelect) {
-        currentGame.textContent = 'Draw!'
-        // updateScore(computerScore, playerScore);
-    } else if (comSelect == 'Rock' && playerSelect == 'Paper' ||
-        comSelect == 'Paper' && playerSelect == 'Scissor' ||
-        comSelect == 'Scissor' && playerSelect == 'Rock') {
-        playerScore += 1;
-        // updateScore(computerScore, playerScore);
-        currentGame.textContent = 'Player won!'
-    } else {
-        computerScore += 1;
-        // updateScore(computerScore, playerScore);
-        currentGame.textContent = 'Computer won!'
-    }
-    updateScore(computerScore, playerScore);
-    // updateWinner(computerScore, playerScore);
+function win(user, computer) {
+    const userChoiceDiv = document.getElementById(user);
+    userScore++;
+    userScore_span.innerHTML = userScore;
+    compScore_span.innerHTML = compScore;
+    result_p.innerHTML = `User: ${convertToWord(user)} VS Computer: ${convertToWord(computer)}. You win!`;
+    userChoiceDiv.classList.add('green-glow');
+    setTimeout(() => document.getElementById(user).classList.remove('green-glow'), 500);
 }
 
-function leftGameUpdate(totalRound) {
-    leftGame.textContent = totalRound;
+function lose(user, computer) {
+    const userChoiceDiv = document.getElementById(user);
+    compScore++;
+    userScore_span.innerHTML = userScore;
+    compScore_span.innerHTML = compScore;
+    result_p.innerHTML = `User: ${convertToWord(user)} VS Computer: ${convertToWord(computer)}. You lost!`;
+    userChoiceDiv.classList.add('red-glow');
+    setTimeout(() => document.getElementById(user).classList.remove('red-glow'), 500);
 }
 
-function updateWinner(computerScore, playerScore) {
-    if (computerScore > playerScore) {
-        winAnnounce.textContent = 'You lost. Try again!'
-    } else {
-        winAnnounce.textContent = 'You won! Well done!'
-    }
+function draw(user, computer) {
+    const userChoiceDiv = document.getElementById(user);
+    result_p.innerHTML = `${convertToWord(computer)} VS ${convertToWord(user)}. DRAW!`
+    userChoiceDiv.classList.add('grey-glow');
+    setTimeout(() => document.getElementById(user).classList.remove('grey-glow'), 500);
 }
 
-// function game(totalRound = 5) {
-//     let gamePlayed = 0;
-//     while (gamePlayed < totalRound) {
-//         // let player = prompt('Rock, paper or scissor?!')
-//         // let computer = computerPlay();
+// setTimeout takes 2 arguments. 1: function, 2:Time in mili-second before you perform the function1.
 
-//         // player = capitalizeUserInput(player);
-//         // result = playRound(computer, player);
-
-//         if (result == 'win') {
-//             console.log(`${player} beats ${computer}, you won.`);
-//         } else if (result == 'lose') {
-//             console.log(`${computer} beats ${player}, you lost.`);
-//         } else {
-//             console.log('Draw!');
-//         }
-//         totalRound--;
-//     }
-//     displayGameResult(computerScore, playerScore);
-// }
-
-
-function displayGameResult(computerScore, playerScore) {
-    if (computerScore > playerScore) {
-        console.log(`${computerScore}:${playerScore} You lost.`);
-    } else if (playerScore > computerScore) {
-        console.log(`${computerScore}:${playerScore} You won.`);
-    } else {
-        console.log(`${computerScore}:${playerScore} Record Tie!`);
+function game(userChoice) {
+    const computerChoice = getComputerChoice();
+    switch (userChoice + computerChoice) {
+        case "rs":
+        case "pr":
+        case "sp":
+            win(userChoice, computerChoice);
+            break;
+        case "rp":
+        case "ps":
+        case "sr":
+            lose(userChoice, computerChoice);
+            break;
+        case "rr":
+        case "pp":
+        case "ss":
+            draw(userChoice, computerChoice);
+            break;
     }
 }
 
-
-
-function getPlayerSelect(e) {
-    let comSelect = computerPlay()
-    let playerSelect = e.target.textContent;
-    playRound(comSelect, playerSelect);
+main();
+function main() {
+    choices.forEach(userChoice => userChoice.addEventListener('click', () =>
+        game(userChoice.id)
+    ));
 }
-
-
-
-// game(1);
-
-
-// function capitalizeUserInput(playerInput) {
-//     // Turn user input to a capitalized string.
-//     playerInput = playerInput[0].toUpperCase()
-//         + playerInput.slice(1).toLowerCase();
-//     return playerInput;
-// }
-
-
