@@ -51,8 +51,6 @@ function draw(user, computer) {
     setTimeout(() => document.getElementById(user).classList.remove('grey-glow'), 500);
 }
 
-// setTimeout takes 2 arguments. 1: function, 2:Time in mili-second before you perform the function1.
-
 function game(userChoice) {
     const computerChoice = getComputerChoice();
     switch (userChoice + computerChoice) {
